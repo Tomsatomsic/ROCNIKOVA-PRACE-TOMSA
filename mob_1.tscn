@@ -1,0 +1,71 @@
+[gd_scene load_steps=8 format=3 uid="uid://etuboaa4a1ie"]
+
+[ext_resource type="Script" path="res://Global/Mob1.gd" id="1_bxkru"]
+[ext_resource type="PackedScene" uid="uid://b2qmjfaffdtij" path="res://Interaction/InteractionArea/interaction_area.tscn" id="2_tyb7q"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5a3pk"]
+size = Vector2(57.5, 53.5)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_c1aqx"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"Death",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"Jump",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2uqt7"]
+radius = 62.0081
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a3enj"]
+size = Vector2(50, 52)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g6qcb"]
+size = Vector2(105, 52)
+
+[node name="Mob1" type="CharacterBody2D"]
+script = ExtResource("1_bxkru")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(474, 224)
+shape = SubResource("RectangleShape2D_5a3pk")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CollisionShape2D"]
+position = Vector2(0, -9)
+sprite_frames = SubResource("SpriteFrames_c1aqx")
+animation = &"Jump"
+
+[node name="PlayerDetection" parent="." instance=ExtResource("2_tyb7q")]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetection"]
+position = Vector2(477, 216)
+shape = SubResource("CircleShape2D_2uqt7")
+
+[node name="PlayerDeath" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDeath"]
+position = Vector2(473, 217)
+shape = SubResource("RectangleShape2D_a3enj")
+
+[node name="PlayerCollision" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollision"]
+position = Vector2(474, 221)
+shape = SubResource("RectangleShape2D_g6qcb")
+
+[connection signal="body_exited" from="PlayerDetection" to="." method="_on_player_detection_body_exited"]
+[connection signal="body_entered" from="PlayerDeath" to="." method="_on_player_death_body_entered"]
+[connection signal="body_exited" from="PlayerDeath" to="." method="_on_player_death_body_exited"]
+[connection signal="body_entered" from="PlayerCollision" to="." method="_on_player_death_body_entered"]
+[connection signal="body_exited" from="PlayerCollision" to="." method="_on_player_death_body_exited"]

@@ -1,0 +1,56 @@
+[gd_scene load_steps=9 format=3 uid="uid://btfn41ajylabk"]
+
+[ext_resource type="Texture2D" uid="uid://bv4ercny2mtj" path="res://Sprites/Backgrounds/buck.png" id="1_2jb3l"]
+[ext_resource type="Script" path="res://collectable.gd" id="1_abvtv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m30id"]
+atlas = ExtResource("1_2jb3l")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_47wj6"]
+atlas = ExtResource("1_2jb3l")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2h8wx"]
+atlas = ExtResource("1_2jb3l")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e3kp1"]
+atlas = ExtResource("1_2jb3l")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wvh57"]
+animations = [{
+"frames": [{
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_m30id")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_47wj6")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_2h8wx")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_e3kp1")
+}],
+"loop": true,
+"name": &"default",
+"speed": 7.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dadhw"]
+radius = 33.2415
+
+[node name="Collectable" type="Area2D"]
+script = ExtResource("1_abvtv")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_wvh57")
+autoplay = "default"
+frame_progress = 0.50684
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_dadhw")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
