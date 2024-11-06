@@ -1,0 +1,238 @@
+[gd_scene load_steps=21 format=3 uid="uid://c7v015vhqsi4w"]
+
+[ext_resource type="Texture2D" uid="uid://bhxl8jxl34sdd" path="res://Sprites/Main Character/Idle-Sheet-Sheet.png" id="2_r0ep0"]
+[ext_resource type="Texture2D" uid="uid://cn828gvea08at" path="res://Sprites/Main Character/Run-Sheet.png" id="4_kvbgl"]
+
+[sub_resource type="GDScript" id="GDScript_mrypd"]
+script/source = "extends CharacterBody2D
+
+
+const SPEED = 450.0
+const JUMP_VELOCITY = -650.0
+
+
+# Get the gravity from the project settings to be synced with RigidBody nodes.
+var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
+@onready var anim = get_node(\"AnimatedSprite2D\")
+var player
+var health = 10
+
+func _physics_process(delta):
+	# Add the gravity.
+	if not is_on_floor():
+		velocity.y += gravity * delta
+
+	# Handle Jump.
+	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var direction = Input.get_axis(\"ui_left\", \"ui_right\")
+	
+
+	if direction:
+		velocity.x = direction * SPEED
+		if velocity.y == 0:anim.play(\"Run\")
+		
+	else:
+		
+	
+		velocity.x = move_toward(velocity.x, 0, 24)
+		if velocity.y == 0:anim.play(\"Idle\")
+
+	move_and_slide()
+
+"
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_r6fch"]
+radius = 28.0
+height = 110.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7l7vf"]
+atlas = ExtResource("2_r0ep0")
+region = Rect2(7, 0, 37, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1lt28"]
+atlas = ExtResource("2_r0ep0")
+region = Rect2(44, 0, 37, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h8qqc"]
+atlas = ExtResource("2_r0ep0")
+region = Rect2(81, 0, 37, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6wtsk"]
+atlas = ExtResource("2_r0ep0")
+region = Rect2(118, 0, 37, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sb84i"]
+atlas = ExtResource("2_r0ep0")
+region = Rect2(155, 0, 37, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0j6vw"]
+atlas = ExtResource("4_kvbgl")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ebyk8"]
+atlas = ExtResource("4_kvbgl")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qnf4g"]
+atlas = ExtResource("4_kvbgl")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w3uxx"]
+atlas = ExtResource("4_kvbgl")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nla78"]
+animations = [{
+"frames": [{
+"duration": 4.0,
+"texture": SubResource("AtlasTexture_7l7vf")
+}, {
+"duration": 0.4,
+"texture": SubResource("AtlasTexture_1lt28")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_h8qqc")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_6wtsk")
+}, {
+"duration": 6.0,
+"texture": SubResource("AtlasTexture_sb84i")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"Jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_0j6vw")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_ebyk8")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_qnf4g")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_w3uxx")
+}],
+"loop": true,
+"name": &"Run",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0to6d"]
+size = Vector2(49, 66)
+
+[sub_resource type="Animation" id="Animation_qxjtg"]
+resource_name = "Hurt"
+
+[sub_resource type="Animation" id="Animation_nnn2f"]
+resource_name = "Idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Player/AnimatedSprite2D:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Idle"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Player/AnimatedSprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(1, 2.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [4, 2]
+}
+
+[sub_resource type="Animation" id="Animation_ypb0m"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Player/AnimatedSprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="Animation" id="Animation_jq3w7"]
+resource_name = "Run"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ktnld"]
+_data = {
+"Hurt": SubResource("Animation_qxjtg"),
+"Idle": SubResource("Animation_nnn2f"),
+"RESET": SubResource("Animation_ypb0m"),
+"Run": SubResource("Animation_jq3w7")
+}
+
+[node name="Player" type="Node2D"]
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(6, -8)
+disable_mode = 1
+script = SubResource("GDScript_mrypd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(292, 370)
+shape = SubResource("CapsuleShape2D_r6fch")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player"]
+position = Vector2(294, 367.6)
+scale = Vector2(2.025, 2.26875)
+sprite_frames = SubResource("SpriteFrames_nla78")
+animation = &"Run"
+frame = 1
+speed_scale = 2.0
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position = Vector2(297, 370)
+zoom = Vector2(0.7, 0.7)
+process_callback = 0
+limit_left = -10000
+limit_bottom = 100000
+position_smoothing_enabled = true
+position_smoothing_speed = 4.0
+drag_horizontal_enabled = true
+drag_horizontal_offset = 1.0
+drag_vertical_offset = -1.0
+drag_left_margin = 0.4
+drag_top_margin = 0.0
+drag_bottom_margin = 0.5
+
+[node name="Area2D" type="Area2D" parent="Player"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Area2D"]
+position = Vector2(347.5, 372)
+shape = SubResource("RectangleShape2D_0to6d")
+disabled = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ktnld")
+}
+autoplay = "Idle"
+speed_scale = 2.0
